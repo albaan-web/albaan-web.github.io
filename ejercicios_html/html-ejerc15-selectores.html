@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>ejerc15-selectores</title>
+    </head>
+    <body>
+        <h1>Tipos de selectores que entran en examen</h1>
+
+        <h2>Clase (class="")</h2>
+        <p>
+            El selector de clases selecciona elementos HTML con un atributo de clase específico. Para seleccionar
+            elementos con una clase específica, escribe un carácter de punto (.), seguido del nombre de la clase.
+            <em><strong>Atento:</strong></em> ¡El nombre de una clase no puede comenzar con un número!
+        </p>
+        <p>
+            En este ejemplo, todos los elementos HTML con class="center" serán rojos y estarán alineados en el
+            centro:<br />
+            <strong>.center { text-align: center; color: red; }</strong>
+        </p>
+
+        <h2>Identificador (id="")</h2>
+        <p>
+            El selector de identificación utiliza el atributo de identificación de un elemento HTML para seleccionar un
+            elemento específico. La identificación de un elemento es única dentro de una página, por lo que el selector
+            de identificación se usa para seleccionar un elemento único. Para seleccionar un elemento con una
+            identificación específica, escribe un carácter almohadilla (#), seguido de la identificación del
+            elemento.<br />
+        </p>
+        <p>
+            La siguiente regla CSS se aplicará al elemento HTML con id="para1":<br />
+            <strong>#para1 { text-align: center; color: red; }</strong>
+        </p>
+        <h2>Todos los elementos (*)</h2>
+        <p>El selector universal (*) selecciona todos los elementos HTML de la página.</p>
+        <p>
+            La siguiente regla CSS afectará a todos los elementos HTML de la página:<br />
+            <strong>* { text-align: center; color: blue; }</strong>
+        </p>
+        <h2>Varios elementos ( p, em, h1, h2)</h2>
+        <p>
+            El selector de agrupación selecciona todos los elementos HTML con las mismas definiciones de estilo. Para
+            agrupar selectores, separe cada selector con una coma.
+        </p>
+        <p>
+            En este ejemplo hemos agrupado los selectores del código anterior:<br />
+            <strong>h1, h2, p { text-align: center; color: red; }</strong>
+        </p>
+
+        <h2>Elementos contenidos en otros elementos (ol li)</h2>
+        <p>El combinador secundario selecciona todos los elementos que son hijos de un elemento específico.</p>
+        <p>
+            El siguiente ejemplo selecciona todos los elementos "li" que son hijos de un elemento "ol":<br />
+            <strong>ol>li { background-color: yellow; }</strong>
+        </p>
+        <h2>Sobrevuleo (p:hover)</h2>
+        <p>
+            El selector :hover en CSS se utiliza para aplicar estilos cuando el usuario coloca el cursor sobre un
+            elemento específico. En el caso de p:hover, se aplican estilos a los elementos párrafo cuando el usuario
+            pasa el mouse sobre ellos.
+        </p>
+        <p>Aplicaciones comunes de :hover:</p>
+        <ul>
+            <li>
+                Cambiar colores: Como en el ejemplo, cambiar el color de texto o de fondo de un elemento al pasar el
+                ratón.
+            </li>
+            <li>
+                Animaciones: Realizar animaciones o transiciones visuales, como aumentar el tamaño de un botón al pasar
+                el cursor.
+            </li>
+            <li>
+                Interactividad: Mejorar la experiencia de usuario al proporcionar retroalimentación visual de que un
+                elemento es interactivo, como botones, enlaces o imágenes.
+            </li>
+        </ul>
+        <p>
+            Por ejemplo, si quieres cambiar el color de un texto dentro de un párrafo cuando el usuario lo pasa el
+            cursor por encima, puedes usar el siguiente código: <strong>p:hover { color: red; }</strong><br />
+            Este código cambiará el color del texto dentro del párrafo a rojo cuando el mouse esté sobre el párrafo.
+        </p>
+
+
+    </body>
+</html>
