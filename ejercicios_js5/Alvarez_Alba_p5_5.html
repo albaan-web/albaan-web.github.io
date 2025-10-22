@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Alba Alvarez Nuño</title>
+         <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+    </head>
+    <body>
+        <script>
+function setup() {
+  createCanvas(800, 500);   // Prueba a cambiar estos números y verás que todo se adapta
+  background(255, 251, 77);
+  noStroke();
+
+  // Título centrado usando width/2
+  textSize(28);
+  textAlign(CENTER, TOP);
+  fill(82, 0, 181);
+  text("Patinaje de velocidad", width/2, 16);
+
+  // Subtítulo justo debajo
+  textSize(16);
+  fill(44, 119, 232);
+  text("Mi deporte favorito", width/2, 50);
+
+    //Nombre centrado
+    textSize(16)
+    textAlign(CENTER, BOTTOM)
+    fill(255, 84, 84)
+    text("Alba Álvarez Nuño", width/2, height-8);
+    
+  // Esquinas con coordenadas del propio lienzo
+  textSize(12);
+  fill(0);
+
+  textAlign(LEFT, TOP);
+  text("(0, 0)", 6, 6);
+
+  textAlign(RIGHT, TOP);
+  text("(" + width + ", 0)", width - 6, 6);
+
+  textAlign(LEFT, BOTTOM);
+  text("(0, " + height + ")", 6, height - 6);
+
+  textAlign(RIGHT, BOTTOM);
+  text("(" + width + ", " + height + ")", width - 6, height - 6);
+
+  // Centro real calculado con width/2 y height/2
+  textAlign(CENTER, CENTER);
+  textSize(14);
+  fill(30);
+  text("Centro (" + int(width/2) + ", " + int(height/2) + ")", width/2, height/2);
+}
+</script>
+</body>
+</html>

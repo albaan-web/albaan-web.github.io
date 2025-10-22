@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Alba Alvarez Nuño</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+    </head>
+    <body>
+    <script>
+     function setup() {
+        createCanvas(400,400)
+        background(255)
+        noFill();
+        stroke(0,0,0);
+        strokeWeight(3);
+        circle(200, 200, 180);         // círculo 
+        
+        fill(0);
+        noStroke();
+        strokeWeight(3);
+        circle(170, 170, 35);         // ojo relleno
+        fill(0);
+        noStroke();
+        strokeWeight(3);
+        circle(230, 170, 35);         // ojo relleno
+        
+        stroke(181, 59, 29)
+        strokeWeight(4)
+        noFill()
+        arc(200, 230, 100, 50, 0, PI) // media elipse boca sonriente
+         
+        fill(255,0,0,40);
+        noStroke();
+        strokeWeight(3);
+        circle(140, 220, 40);         
+        noStroke();
+        strokeWeight(3);
+        circle(260, 220, 40);// mejillas
+        
+         //gafas
+        
+        fill(0,0,255,30)
+        stroke(14, 173, 173) 
+        ellipse(165, 170, 70, 50);   // elipse horizontal
+        stroke(14, 173, 173) 
+        ellipse(235, 170, 70, 50);   // elipse horizontal
+         
+        line(130,170,120,150)
+        line(270,170,280,150)
+     }
+    
+        </script>
+    </body>
+</html>
