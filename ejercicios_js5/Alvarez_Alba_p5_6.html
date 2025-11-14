@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Alba Alvarez Nuño</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+    </head>
+    <body>
+    <script>
+      let x, y, v, d, r;
+      let xl,yl,vl,dl,rl;
+     function setup() {
+      createCanvas(800,800)
+       d = min(width, height) * 0.10; //diámetro sol
+       r = d / 2;
+       x = -r;
+       y = height * 0.10;   //altura sol
+       v = width / 400;   //velocidad sol
+      
+      dl = min(width, height) * 0.10; //diámetro sol
+      rl = d / 2;
+      xl=-r-width;
+      yl=height * 0.10;
+      v=width/500;
+
+     }
+     function draw() {
+        createCanvas(800,800)
+        background(167, 232, 242)
+      
+      
+       //arcoíris
+      strokeWeight(5)
+      stroke(227, 55, 20) //rojo
+      noFill(0)
+      arc(350, 280, 550, 400, PI, 0)
+      
+      strokeWeight(5)
+      stroke(243, 245, 12) //amarillo
+      noFill(0)
+      arc(350, 280, 540, 390, PI, 0)
+      
+      strokeWeight(5)
+      stroke(24, 222, 44) //verde
+      noFill(0)
+      arc(350, 280, 530, 380, PI, 0)
+      
+      strokeWeight(5)
+      stroke(24, 149, 222) //azul
+      noFill(0)
+      arc(350, 280, 520, 370, PI, 0)
+      
+      strokeWeight(5)
+      stroke(192, 24, 222) //morado
+      noFill(0)
+      arc(350, 280, 520, 360, PI, 0)
+      
+      strokeWeight(5)
+      stroke(245, 118, 194) //rosa
+      noFill(0)
+      arc(350, 280, 510, 350, PI, 0)
+        
+        stroke(235, 243, 245)
+        fill(235, 243, 245)
+        rect(50,300,400,300) //rectángulo izquierdo de la casa
+         
+        stroke(235, 243, 245)
+        fill(235, 243, 245)
+        rect(450,350,50,100) //rectángulo que une la casa
+         
+        stroke(235, 243, 245)
+        fill(235, 243, 245)
+        rect(500,350,250,250) //rectángulo derecha de la casa
+         
+        stroke(117, 26, 6)
+        strokeWeight(2);
+        fill(150, 52, 15);
+        triangle(50,300,450,300,250,150); //tejado de la izq
+        
+        fill(150, 52, 15);
+        triangle(500,350,750,350,630,250); //tejado de la izq
+        
+      //prado
+        stroke(68, 120, 55)
+        fill(68, 120, 55)
+        rect(0,600,800,800) 
+        
+      //sol
+        stroke(255, 255, 48) 
+        fill(255, 255, 48)
+        circle(x,y,d)
+        x = x + v;
+      
+      //luna
+      stroke(92, 92, 84)
+      fill(110, 110, 98)
+      circle(xl,yl,dl)
+      xl=xl+v;
+      
+      //ventanas
+      stroke(0,0,0)
+      fill(147, 194, 204,50)
+      rect(80,340,80,130)
+      stroke(0,0,0)
+      fill(147, 194, 204,50)
+      rect(200,340,80,130)
+      stroke(0,0,0)
+      fill(147, 194, 204,50)
+      rect(320,340,80,130)
+      stroke(0,0,0)
+      fill(147, 194, 204,50)
+      rect(540,370,80,130)
+      
+      
+      //marcos ventanas
+      line(120,340,120,470)
+      line(240,340,240,470)
+      line(360,340,360,470)
+      line(80,405,160,405)
+      line(200,405,280,405)
+      line(320,405,400,405)
+      line(580,370,580,500)
+      
+      //acera
+      strokeWeight(90)
+      stroke(161, 143, 82,190)
+     line(690,600,600,820)
+      
+      //color (piedra) inferior de la casa
+      strokeWeight(4)
+      stroke(62, 74, 77)
+      fill(79, 94, 97)
+      rect(50,500,400,100)
+     
+      strokeWeight(4)
+      stroke(62, 74, 77)
+      fill(79, 94, 97)
+      rect(500,550,250,50)
+      
+      //ventana que une las casas
+      strokeWeight(3)
+      stroke(0,0,0)
+      fill(155, 188, 196,100)
+      rect(450,450,50,150)
+      
+      //puerta
+       stroke(69, 49, 25);
+       strokeWeight(4);
+       fill(97, 65, 35);     
+       rect(650, 480, 80, 120);
+      //manilla puerta
+      strokeWeight(4)
+      stroke(192, 192, 192)
+      line(660,510,660,580)
+      
+      //coche
+      fill(232, 225, 225)
+      arc(200,660,200,180,PI,0)
+      fill(232, 225, 225)
+      arc(125,640,100,55,HALF_PI,-HALF_PI)
+      
+      fill(61, 59, 59) //ruedas
+      stroke(0,0,0)
+      circle(150,660,50)
+      fill(61, 59, 59) 
+      stroke(0,0,0)
+      circle(250,660,50)
+      
+      //ventanilla
+      strokeWeight(2)
+      stroke(32, 150, 150)
+      fill(50,173,173,50)
+      arc(190,615,70,70,PI, -HALF_PI)
+      strokeWeight(2)
+      stroke(32, 150, 150)
+      fill(50,173,173,50)
+      arc(210,615,70,70,-HALF_PI,TWO_PI)
+      
+      //LUCES
+      stroke(236, 242, 65,100)
+      fill(236, 242, 65,100)
+      rect(75,640,7,10)
+      
+     //tubo de escape
+     stroke(0,0,0)
+     fill(0,0,0)
+     ellipse(300,660,20,5)
+      
+      
+    // Rotulito
+    stroke(255)
+    fill(0);
+    textSize(14);
+    textAlign(LEFT, TOP);
+    text("A1 — Mi escena con variables", 10, 10);
+     }
+     
+    
+    
+        </script>
+    </body>
+</html>
