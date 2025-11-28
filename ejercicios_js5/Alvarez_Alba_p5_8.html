@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Alba Álvarez Nuño</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+    </head>
+    <body>
+    <script>
+        let centerX,centerY,sunSize;
+        let xm,ym,dm, Rm, θ, w;
+        let xv,yv,dv, Rv, θv, wv;
+        let xt,yt,dt, Rt, θt, wt;
+        let xMARS,yMARS,dMARS, RMARS, θMARS, wMARS;
+        let xj,yj,dj, Rj, θj, wj;
+        let xs,ys,ds, Rs, θs, ws;
+        let xu,yu,du, Ru, θu, wu;
+        let xn,yn,dn, Rn, θn, wn;
+    function setup() {
+        createCanvas(1000,1000)
+        background(8, 8, 31)
+        
+        //sol
+        centerX=width/2;
+        centerY=height/2;
+        sunSize=0.10*min(width,height);
+        
+        //mercurio
+        w=0.030;
+        θ=0
+        Rm=70;
+        xm=centerX+Rm*cos(θ);
+        ym=centerY+Rm*sin(θ);
+        dm=sunSize/10;
+        
+        //venus
+        wv=0.012;
+        θv=PI/4
+        Rv=100;
+        xv=centerX+Rv*cos(θv);
+        yv=centerY+Rv*sin(θv);
+        dv=sunSize/5;
+        
+        //tierra
+        wt=0.010;
+        θt=PI/2
+        Rt=150;
+        xt=centerX+Rt*cos(θt);
+        yt=centerY+Rt*sin(θt);
+        dt=sunSize/4.5;
+        
+        //MARTE
+        wMARS=0.008;
+        θMARS=3*PI/4;
+        RMARS=180;
+        xMARS=centerX+RMARS*cos(θt);
+        yMARS=centerY+RMARS*sin(θt);
+        dMARS=sunSize/10;
+        
+        //jupiter
+        wj=0.004;
+        θj=PI;
+        Rj=250;
+        xj=centerX+Rj*cos(θj);
+        yj=centerY+Rj*sin(θj);
+        dj=sunSize/2;
+        
+        //saturno
+        ws=0.003;
+        θs=5*PI/4;
+        Rs=330;
+        xs=centerX+Rs*cos(θs);
+        ys=centerY+Rs*sin(θs);
+        ds=sunSize/2;
+        
+         //urano
+        wu=0.002;
+        θu=3*PI/2;
+        Ru=400;
+        xu=centerX+Ru*cos(θu);
+        yu=centerY+Ru*sin(θu);
+        du=sunSize/3;
+        
+         //neptuno
+        wn=0.0015;
+        θn=7*PI/4;
+        Rn=470;
+        xn=centerX+Rn*cos(θn);
+        yn=centerY+Rn*sin(θn);
+        dn=sunSize/3;
+    }
+    function draw() {
+        background(8, 8, 31);
+        
+        //sol
+        stroke(255, 224, 0)
+        fill(255, 224, 0)
+        circle(centerX,centerY,sunSize)
+        
+        //mercurio
+        stroke(141, 141, 168)
+        fill(141, 141, 168)
+        circle(xm,ym,dm)
+        θ = θ + w;
+        xm = centerX + Rm * cos(θ); 
+        ym = centerY + Rm * sin(θ);
+        
+        //venus
+        strokeWeight(2)
+        stroke(186, 155, 71)
+        fill(237, 206, 121)
+        circle(xv,yv,dv)
+        θv = θv + wv;
+        xv = centerX + Rv * cos(θv); 
+        yv = centerY + Rv * sin(θv);
+        
+        //tierra
+        strokeWeight(3)
+        stroke(31, 143, 17)
+        fill(47, 136, 204)
+        circle(xt,yt,dt)
+        θt = θt + wt;
+        xt = centerX + Rt * cos(θt); 
+        yt = centerY + Rt * sin(θt);
+        
+        //marte
+        strokeWeight(3)
+        stroke(181, 85, 13)
+        fill(207, 107, 31)
+        circle(xMARS,yMARS,dMARS)
+        θMARS= θMARS + wMARS;
+        xMARS = centerX + RMARS * cos(θMARS); 
+        yMARS = centerY + RMARS * sin(θMARS);
+        
+        //jupiter
+        noStroke()
+        fill(107, 15, 186)
+        circle(xj,yj,dj)
+        θj = θj + wj;
+        xj = centerX + Rj * cos(θj); 
+        yj = centerY + Rj * sin(θj);
+        
+        //saturno
+        strokeWeight(4)
+        stroke(138, 110, 22)
+        fill(171, 135, 22)
+        circle(xs,ys,ds)
+        θs = θs + ws;
+        xs = centerX + Rs * cos(θs); 
+        ys = centerY + Rs * sin(θs);
+        
+        //urano
+        noStroke()
+        fill(168, 230, 221)
+        circle(xu,yu,du)
+        θu = θu + wu;
+        xu = centerX + Ru * cos(θu); 
+        yu = centerY + Ru * sin(θu);
+        
+        //neptuno
+        noStroke()
+        fill(26, 93, 217)
+        circle(xn,yn,dn)
+        θn = θn + wn;
+        xn = centerX + Rn * cos(θn); 
+        yn = centerY + Rn * sin(θn);
+    }
+        
+        
+        
+        </script>
+    </body>
+</html>
