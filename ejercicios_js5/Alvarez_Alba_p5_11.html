@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Alba Álvarez Nuño</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+    </head>
+    <body>
+    <script>
+        let xS, yS, dS, rS, vS;
+        let xL, yL, dL, rL, vL;
+        
+        function setup() {
+            createCanvas(500, 500);
+            dS = min(width, height) * 0.20;       // diámetro del Sol 
+            rS = dS / 2;
+            yS = height/4;       // altura relativa
+            xS = -rS;                 // arranca entrando por la izquierda
+            vS = width / 400;         // velocidad proporcional al ancho
+            
+            dL = 0.5* dS;       
+            rL = dL / 2;
+            yL = height/3;      
+            xL = -width-rL;                 
+            vL = vS;        
+        }
+        function draw() {
+        background(167, 232, 242)
+             
+        if (xS <= width+rS) {
+        background(135, 206, 235);}  // azul día
+   
+        else {
+    background(0); } // negro noche
+  
+        //prado
+        noStroke();
+        fill(20, 120, 40);
+        rect(0, 0.8*height, width, 0.2*height);
+
+        //sol
+        noStroke();
+        fill(255, 210, 0);
+        circle(xS, yS, dS);
+            xS = xS + vS;
+        //luna
+            noStroke();
+        fill(168, 160, 160);
+        circle(xL, yL, dL);
+        xL = xL + vL;
+            
+        if (xS >= 2*width - rS) {xS = -rS; xL=-width-rL;}  // reentrar por la izquierda
+  
+        textSize(12);
+        strokeWeight(2)
+        stroke(0);
+        fill(255);
+        text(xS, 10, 10);
+        text(xL, 10, 28);
+            
+        }
+        
+     
+        
+    </script>
+    </body>
+</html>
