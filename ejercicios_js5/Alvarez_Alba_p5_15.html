@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Alba Álvarez Nuño</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+    </head>
+    <body>
+    <script>
+        let xS, yS, dS, rS, vS;
+        let xL, yL, dL, rL, vL;
+        let dia, mes, anio;
+        
+            //monigote
+            let xP, yP;        // posición del personaje
+            let S;             // tamaño base del stickman
+            let vP;            // velocidad horizontal (izq/der)
+
+            let groundY;       // altura del suelo (coincide con tu rectángulo de suelo en T12)
+            let vY;            // velocidad vertical del salto
+            let jumpV;         // impulso del salto (valor negativo para subir)
+            let g;             // gravedad (valor positivo para bajar)
+        
+            let rHead;
+            let bodyL;
+            let armL;
+            let legL; 
+
+            let hipY;
+            let shoulderY;  
+            let headY;
+        
+            let xD, yD, tD, vD, disparoActivo;
+            let xO, yO, wO, hO, vO;
+        
+        function setup() {
+            createCanvas(500, 500);
+            dS = min(width, height) * 0.20;       // diámetro del Sol 
+            rS = dS / 2;
+            yS = height/4;       // altura relativa
+            xS = -rS;                 // arranca entrando por la izquierda
+            vS = width / 400;         // velocidad proporcional al ancho
+            
+            dL = 0.5* dS;       
+            rL = dL / 2;
+            yL = height/3;      
+            xL = -width-rL;                 
+            vL = vS;        
+            
+            dia = 26; 
+            mes = 7; 
+            anio = 2025; 
+           
+            groundY=0.8*height; //height del prado
+            // Stickman: tamaño y posición inicial
+            S  = 0.12 * min(width, height);
+            xP = 0.25 * width;
+            yP = groundY;                 // IMPORTANTE: aquí yP será la posición de los pies
+
+            // Movimiento horizontal
+            vP = width / 150;
+
+            // Salto (valores sencillos)
+            vY = 0;
+            jumpV = -0.030 * height;      // impulso hacia arriba
+            g = 0.0016 * height;          // aceleración hacia abajo (pequeña)
+            
+            //monigote
+            rHead = 0.20 * S;
+            bodyL = 0.60 * S;
+            armL  = 0.45 * S;
+            legL  = 0.55 * S;
+            hipY = yP - legL; 
+            shoulderY = hipY - bodyL; 
+            headY = shoulderY - rHead; 
+            
+            //DISPARO
+            disparoActivo = false;
+            tD = 0.04 * width;
+            vD = 0.02 * height;
+            
+            //OBJETIVO
+            
+            yO = random(0.2, 0.35) * height;
+            wO = 0.12 * width;
+            hO = 0.06 * height;
+            xO = -wO;
+            vO = random(width/300, width/150);
+        }
+        
+        function draw() {
+        background(167, 232, 242)
+            
+        //dia y noche 
+        if (xS <= width+rS) {
+        background(135, 206, 235);}  // azul día
+   
+        else {
+        background(0); } // negro noche
+  
+        //prado
+        noStroke();
+        fill(20, 120, 40);
+        rect(0, 0.8*height, width, 0.2*height);
+            
+             dibujarSol();  
+             dibujarLuna();  
+            
+        //sol
+        xS = xS + vS;
+        //luna
+        xL = xL + vL;
+            
+        //objetivo
+        xO=xO+vO;
+        if (xO > width || xO < -wO) {
+        if (random() <0.5) {
+            xO = -wO;
+            vO = random(width/300, width/150);
+        }
+        else {
+            xO = width;
+            vO = -random(width/300, width/150);
+        } 
+        
+        yO = random(0.2, 0.35) * height;}
+            
+        dibujarObjetivo();
+            
+        //DISPARO
+        if (disparoActivo === true) {
+        yD -= vD;
+        if (yD < 0) {
+        disparoActivo = false;}
+         dibujarDisparo();
+           }
+        
+            actualizarCalendario();
+            dibujarstickman();
+        }
+        
+        
+        function keyPressed() {
+        if (keyCode === UP_ARROW) {
+        // Solo saltamos si estamos en el suelo
+        if (yP === groundY) {
+        vY = jumpV;}}
+            
+        if (key === " ") {
+            if (disparoActivo===false) {
+                xD=xP; 
+                yD=yP-1.40*S; 
+                disparoActivo=true;} 
+            }
+        }
+        
+       function dibujarSol() {
+        noStroke();
+        fill(255, 210, 0);
+        circle(xS, yS, dS);
+                        }
+        function dibujarLuna() {
+        noStroke();
+        fill(180);
+        circle(xL, yL, dL);
+                        }
+            
+        function dibujarObjetivo() {
+        fill(0, 60, 255);
+        rect(xO, yO, wO, hO);}
+        
+        function dibujarDisparo() {
+        stroke(255, 255, 0);
+        strokeWeight(4);
+        line(xD - tD/2, yD, xD + tD/2, yD);
+        line(xD, yD - tD/2, xD, yD + tD/2);}
+            
+        function dibujarstickman(){
+  
+            //mov izq-dcha
+            if (keyIsDown(LEFT_ARROW)) {
+            xP = xP - vP;
+            } else if (keyIsDown(RIGHT_ARROW)) {
+            xP = xP + vP;}
+            if (xP < 0) {
+            xP = 0;}
+            if (xP > width) {
+            xP = width;}
+            
+            // Física mínima del salto (se ejecuta siempre) 
+            vY = vY + g; // gravedad
+            yP = yP + vY; // actualiza pies
+            // Si toca el suelo, corregimos 
+            if (yP > groundY) { yP = groundY; vY = 0; }
+            
+            hipY = yP - legL;
+            shoulderY = hipY - bodyL;
+            headY = shoulderY - rHead;
+ 
+            //monigote
+            stroke(255,43,0);
+            strokeWeight(0.06 * S);
+            noFill();
+            
+            //Cabeza
+            circle(xP, headY, 2 * rHead);
+
+            //Tronco
+            line(xP, shoulderY, xP, hipY);
+
+            //Brazos (una línea horizontal + dos líneas hacia abajo)
+            line(xP - 0.25*S, shoulderY, xP + 0.25*S, shoulderY);
+            line(xP - 0.25*S, shoulderY, xP - 0.25*S, shoulderY + armL);
+            line(xP + 0.25*S, shoulderY, xP + 0.25*S, shoulderY + armL);
+
+            //Piernas
+            line(xP, hipY, xP - 0.18*S, yP);
+            line(xP, hipY, xP + 0.18*S, yP);
+            
+}
+        function actualizarCalendario() { if (xS >= 2*width - rS) {xS = -rS; 
+                                 xL=-width-rL;
+                                 
+                                 dia = dia + 1; 
+
+                
+                if (dia > 30) {
+                    dia = 1;   
+                    mes = mes + 1;   
+                }
+
+                if (mes > 12) {
+                    mes = 1;    
+                    anio = anio + 1; 
+                }
+                                
+                                } 
+  
+             
+            textSize(20);
+            noStroke();
+            fill(255);  
+            
+            if (xS <= width + rS) {
+                fill(0);  //color negro de dia
+            } else {
+                fill(255);  // color blanco durante la noche
+            }
+            
+            text("Fecha: (" + dia + ") (" + mes + ") (" + anio + ")", 10, 20);
+            
+}
+           
+        
+    </script>
+    </body>
+</html>
