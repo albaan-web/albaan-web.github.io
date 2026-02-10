@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Tarea 17</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+</head>
+<body>
+<script>
+
+let xS, yS, dS, rS, vS;
+let xL, yL, dL, rL, vL;
+let dia, mes, anio;
+
+// monigote
+let xP, yP;
+let S;
+let vP;
+let groundY;
+let vY, jumpV, g;
+
+let rHead, bodyL, armL, legL;
+let hipY, shoulderY, headY;
+
+// disparo
+let xD, yD, tD, vD, disparoActivo;
+
+// Objetivo
+let xO, yO, wO, hO, vO;
+
+// Puntos
+let puntos;
+
+// obstaculo
+let xB, yB, wB, hB, vB;
+
+// estado del juego
+let gameOver;
+
+function setup() {
+    createCanvas(500, 500);
+
+    // Sol
+    dS = min(width, height) * 0.20;
+    rS = dS / 2;
+    yS = height / 4;
+    xS = -rS;
+    vS = width / 400;
+
+    // Luna
+    dL = 0.5 * dS;
+    rL = dL / 2;
+    yL = height / 3;
+    xL = -width - rL;
+    vL = vS;
+
+    // Calendario
+    dia = 26;
+    mes = 7;
+    anio = 2025;
+
+    // Suelo
+    groundY = 0.8 * height;
+
+    // Stickman
+    S = 0.12 * min(width, height);
+    xP = 0.25 * width;
+    yP = groundY;
+    vP = width / 150;
+
+    vY = 0;
+    jumpV = -0.030 * height;
+    g = 0.0016 * height;
+
+    rHead = 0.20 * S;
+    bodyL = 0.60 * S;
+    armL = 0.45 * S;
+    legL = 0.55 * S;
+
+    // Disparo
+    disparoActivo = false;
+    tD = 0.04 * width;
+    vD = 0.02 * height;
+
+    // Objetivo
+    wO = 0.12 * width;
+    hO = 0.06 * height;
+    xO = -wO;
+    yO = random(0.2, 0.35) * height;
+    vO = random(width/300, width/150);
+
+    // obstaculo
+    wB = 40;
+    hB = 30;
+    yB = groundY - hB;
+    xB = width; 
+    vB = -random(width/500, width/200);
+
+    puntos = 0;
+    gameOver = false;
+}
+
+function draw() {
+    // Fondo
+    if (xS <= width + rS) background(135, 206, 235);
+    else background(0);
+
+    // Suelo
+    noStroke();
+    fill(20, 120, 40);
+    rect(0, groundY, width, height - groundY);
+
+    dibujarSol();
+    dibujarLuna();
+
+    if (gameOver == false) {
+
+        // Sol y luna
+        xS += vS;
+        xL += vL;
+
+        // Objetivo
+        xO += vO;
+        if (xO > width || xO < -wO) {
+            if (random() < 0.5) {
+                xO = -wO;
+                vO = random(width/300, width/150);
+            } else {
+                xO = width;
+                vO = -random(width/300, width/150);
+            }
+            yO = random(0.2, 0.35) * height;
+        }
+
+        // disparo
+        if (disparoActivo) {
+            yD -= vD;
+
+            if (xD > xO && xD < xO + wO && yD > yO && yD < yO + hO) {
+                disparoActivo = false;
+                puntos++;
+                xO = -wO;
+            }
+
+            if (yD < 0) disparoActivo = false;
+        }
+
+        // obstáculo
+        xB += vB;
+        if (xB > width || xB < -wB) {
+            if (random() < 0.5) {
+                xB = -wB;
+                vB = random(width/200, width/120);
+            } else {
+                xB = width;
+                vB = -random(width/200, width/120);
+            }
+        }
+
+        // colisión stickman–obstáculo
+        let wP = 30;
+        let hP = 70;
+
+        let pIzq = xP - wP/2;
+        let pDer = xP + wP/2;
+        let pArr = yP - hP;
+        let pAbj = yP;
+
+        let bIzq = xB;
+        let bDer = xB + wB;
+        let bArr = yB;
+        let bAbj = yB + hB;
+
+        if (pDer > bIzq && pIzq < bDer && pAbj > bArr && pArr < bAbj) {
+            gameOver = true;
+        }
+    }
+
+    // dibujar siempre
+    dibujarObjetivo();
+    if (disparoActivo) dibujarDisparo();
+    dibujarObstaculo();
+    dibujarStickman();
+    actualizarCalendario();
+    dibujarPuntos();
+
+    if (gameOver == true) dibujarGameOver();
+}
+
+function keyPressed() {
+    if (keyCode === UP_ARROW && yP === groundY) {
+        vY = jumpV;
+    }
+
+    if (key === " " && disparoActivo == false && gameOver == false) {
+        xD = xP;
+        yD = yP - 1.4 * S;
+        disparoActivo = true;
+    }
+}
+
+function dibujarSol() {
+    noStroke();
+    fill(255, 210, 0);
+    circle(xS, yS, dS);
+}
+
+function dibujarLuna() {
+    noStroke();
+    fill(180);
+    circle(xL, yL, dL);
+}
+
+function dibujarObjetivo() {
+    fill(0, 60, 255);
+    rect(xO, yO, wO, hO);
+}
+
+function dibujarDisparo() {
+    stroke(255, 255, 0);
+    strokeWeight(4);
+    line(xD - tD/2, yD, xD + tD/2, yD);
+    line(xD, yD - tD/2, xD, yD + tD/2);
+}
+
+function dibujarObstaculo() {
+    fill(120, 0, 0);
+    rect(xB, yB, wB, hB);
+}
+
+function dibujarStickman() {
+    if (keyIsDown(LEFT_ARROW)) xP -= vP;
+    if (keyIsDown(RIGHT_ARROW)) xP += vP;
+
+    xP = constrain(xP, 0, width);
+
+    vY += g;
+    yP += vY;
+    if (yP > groundY) {
+        yP = groundY;
+        vY = 0;
+    }
+
+    hipY = yP - legL;
+    shoulderY = hipY - bodyL;
+    headY = shoulderY - rHead;
+
+    stroke(255, 43, 0);
+    strokeWeight(0.06 * S);
+    noFill();
+
+    circle(xP, headY, 2 * rHead);
+    line(xP, shoulderY, xP, hipY);
+    line(xP - 0.25*S, shoulderY, xP + 0.25*S, shoulderY);
+    line(xP - 0.25*S, shoulderY, xP - 0.25*S, shoulderY + armL);
+    line(xP + 0.25*S, shoulderY, xP + 0.25*S, shoulderY + armL);
+    line(xP, hipY, xP - 0.18*S, yP);
+    line(xP, hipY, xP + 0.18*S, yP);
+}
+
+function actualizarCalendario() {
+    if (xS >= 2 * width - rS) {
+        xS = -rS;
+        xL = -width - rL;
+        dia++;
+        if (dia > 30) { dia = 1; mes++; }
+        if (mes > 12) { mes = 1; anio++; }
+    }
+
+    fill(xS <= width + rS ? 0 : 255);
+    textSize(20);
+    text("Fecha: (" + dia + ") (" + mes + ") (" + anio + ")", 10, 20);
+}
+
+function dibujarPuntos() {
+    fill(255);
+    stroke(0);
+    textSize(20);
+    text("Puntos: " + puntos, 10, 45);
+}
+
+function dibujarGameOver() {
+    fill(255, 0, 0);
+    textAlign(CENTER);
+    textSize(50);
+    text("GAME OVER", width/2, height/2);
+    textSize(25);
+    text("Puntos: " + puntos, width/2, height/2 + 40);
+}
+
+</script>
+</body>
+</html>
