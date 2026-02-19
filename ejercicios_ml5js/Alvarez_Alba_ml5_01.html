@@ -36,7 +36,9 @@
   <div>
    <h3> Explicación de cómo funciona el código</h3>
 
-   <p> Este script utiliza la librería ml5.js para implementar un sistema de detección de objetos en tiempo real a través de la cámara del dispositivo móvil. Primero, se configura la cámara usando la función initCamera(), que solicita acceso al dispositivo y ajusta el tamaño del canvas según las dimensiones del video. Cuando el usuario hace clic en el botón "Iniciar cámara", se carga el modelo preentrenado COCO-SSD mediante ml5.objectDetector(), el cual es responsable de identificar los objetos en cada fotograma del video. A medida que el video se reproduce, la función loopDetect() se encarga de realizar las detecciones, usando el modelo para identificar los objetos en cada cuadro. Los resultados de la detección se dibujan sobre un canvas transparente utilizando la función draw(), mostrando las cajas delimitadoras y las etiquetas de los objetos junto con su confianza en porcentaje. Además, el script selecciona y muestra la "mejor detección" (el objeto con la mayor confianza) para que el usuario vea cuál es el objeto más preciso que el modelo ha identificado.</p>
+   <p> Este script utiliza la librería ml5.js para implementar un sistema de detección de objetos en tiempo real a través de la cámara del dispositivo móvil.<br>
+     Primero, se configura la cámara usando la función initCamera(), que solicita acceso al dispositivo y ajusta el tamaño del canvas según las dimensiones del video. Cuando el usuario hace clic en el botón "Iniciar cámara", se carga el modelo preentrenado COCO-SSD mediante ml5.objectDetector(), el cual es responsable de identificar los objetos en cada fotograma del video. A medida que el video se reproduce, la función loopDetect() se encarga de realizar las detecciones, usando el modelo para identificar los objetos en cada cuadro.<br>
+     Los resultados de la detección se dibujan sobre un canvas transparente utilizando la función draw(), mostrando las cajas delimitadoras y las etiquetas de los objetos junto con su confianza en porcentaje. Además, el script selecciona y muestra la "mejor detección" (el objeto con la mayor confianza) para que el usuario vea cuál es el objeto más preciso que el modelo ha identificado.</p>
 
   </div>
 
@@ -137,3 +139,4 @@
   </script>
 </body>
 </html>
+
