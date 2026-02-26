@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ML5 03 · BodyPose</title>
+
+  <!-- IMPORTANTE:
+       BodyPose es parte de ml5 1.x (no de 0.12.2).
+       En esta práctica usamos ml5@latest para acceder a BodyPose.
+  -->
+  <script src="https://unpkg.com/ml5@latest/dist/ml5.min.js"></script>
+
+  <style>
+    body { font-family: system-ui, Arial, sans-serif; margin: 16px; }
+    #wrap { position: relative; width: min(720px, 100%); }
+    video, canvas { width: 100%; height: auto; border-radius: 10px; }
+    canvas { position: absolute; left: 0; top: 0; }
+
+    button, input {
+      padding: 10px 12px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .row { display:flex; gap:10px; flex-wrap: wrap; align-items:center; margin-bottom: 10px; }
+    .badge { display:inline-block; border:1px solid #ccc; border-radius:999px; padding: 3px 10px; }
+    .small { font-size: 13px; color: #333; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+  </style>
+</head>
+
+<body>
+  <h1>ML5 03 · BodyPose (captura de posturas)</h1>
+
+  <div class="row">
+    <button id="btnStart">Iniciar cámara + BodyPose</button>
+    <button id="btnShot">Capturar</button>
+
+    <span id="status" class="badge">Estado: esperando…</span>
+    <span id="info" class="badge">Personas detectadas: 0</span>
+  </div>
+
+  <div class="row">
+    <span class="badge">Etiqueta de la postura:</span>
+    <input id="poseName" class="mono" value="P1" />
+    <span class="small">Escribe P1 / P2 / P3 antes de capturar</span>
+  </div>
+
+  <div id="wrap">
+    <video id="video" autoplay playsinline muted></video>
+    <canvas id="overlay"></canvas>
+  </div>
+
+  <p class="small">
+    En esta práctica se dibujan puntos (keypoints) y un esqueleto simple encima del vídeo.
+    Usa el campo <span class="mono">Etiqueta de la postura</span> (P1/P2/P3) y pulsa <b>Capturar</b>.
+    Luego sube los PNG a <b>m5_detecta/capturas/</b> en tu repositorio.
+  </p>
+
+  <script>
+    const btnStart = document.getElementById("btnStart");
+    const btnShot  = document.getElementById("btnShot");
+    const statusEl = document.getElementById("status");
+    const infoEl   = document.getElementById("info");
+    const poseNameEl = document.getElementById("poseName");
+
+    const video  = document.getElementById("video");
+    const canvas = document.getElementById("overlay");
+    const ctx    = canvas.getContext("2d");
+
+    let running = false;
+
+    // BodyPose (MoveNet por defecto; rápido y suficiente para clase)
+    // En ml5 1.x el constructor puede ser async.
+    let bodyPose = null;
+
+    // Aquí guardamos el último resultado que nos dio el modelo
+    let lastPoses = [];
+
+    function setStatus(t) { statusEl.textContent = "Estado: " + t; }
+
+    async function initCamera() {
+      // En móvil, "environment" intenta usar la cámara trasera (mejor para que se vea el cuerpo)
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: { ideal: "environment" } },
+        audio: false
+      });
+
+      video.srcObject = stream;
+      await new Promise(res => video.onloadedmetadata = () => res());
+
+      canvas.width  = video.videoWidth;
+      canvas.height = video.videoHeight;
+    }
+
+    function clearOverlay() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    // Pares de conexiones (esqueleto básico) para MoveNet (17 puntos)
+    // Si el modelo devuelve puntos con nombres distintos, igualmente se verán los puntos (círculos).
+    const skeletonPairs = [
+      [0, 1], [0, 2], [1, 3], [2, 4],          // cabeza/cara (aprox)
+      [5, 6],                                   // hombros
+      [5, 7], [7, 9],                           // brazo izq
+      [6, 8], [8,10],                           // brazo der
+      [5,11], [6,12],                           // torso superior
+      [11,12],                                  // cadera
+      [11,13], [13,15],                         // pierna izq
+      [12,14], [14,16]                          // pierna der
+    ];
+
+    function drawPoseOverlay(poses) {
+      clearOverlay();
+
+      // Estilo
+      ctx.lineWidth = 3;
+      ctx.font = "16px system-ui, Arial";
+
+      // Por cada persona detectada
+      for (const p of poses) {
+        // En ml5 BodyPose, normalmente hay un array de keypoints
+        const kps = p.keypoints || [];
+
+        // 1) Dibujar puntos
+        for (const kp of kps) {
+          // kp suele tener: x, y, confidence (o score)
+          const x = kp.x ?? (kp.position ? kp.position.x : null);
+          const y = kp.y ?? (kp.position ? kp.position.y : null);
+
+          const conf = kp.confidence ?? kp.score ?? 0;
+
+          // dibujamos solo si hay coordenadas válidas y cierta confianza mínima
+          if (x == null || y == null) continue;
+          if (conf < 0.25) continue;
+
+          ctx.beginPath();
+          ctx.arc(x, y, 5, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+
+        // 2) Dibujar esqueleto simple por índices (si hay al menos 17)
+        if (kps.length >= 17) {
+          for (const pair of skeletonPairs) {
+            const a = kps[pair[0]];
+            const b = kps[pair[1]];
+            if (!a || !b) continue;
+
+            const ax = a.x ?? (a.position ? a.position.x : null);
+            const ay = a.y ?? (a.position ? a.position.y : null);
+            const bx = b.x ?? (b.position ? b.position.x : null);
+            const by = b.y ?? (b.position ? b.position.y : null);
+
+            const ac = a.confidence ?? a.score ?? 0;
+            const bc = b.confidence ?? b.score ?? 0;
+
+            if (ax == null || ay == null || bx == null || by == null) continue;
+            if (ac < 0.25 || bc < 0.25) continue;
+
+            ctx.beginPath();
+            ctx.moveTo(ax, ay);
+            ctx.lineTo(bx, by);
+            ctx.stroke();
+          }
+        }
+      }
+    }
+
+    function loopDraw() {
+      if (!running) return;
+
+      // Dibujamos overlay con el último resultado recibido
+      drawPoseOverlay(lastPoses);
+
+      // UI simple
+      infoEl.textContent = "Personas detectadas: " + (lastPoses ? lastPoses.length : 0);
+
+      requestAnimationFrame(loopDraw);
+    }
+
+    function safeText(t) {
+      return (t || "")
+        .toString()
+        .trim()
+        .replaceAll(" ", "_")
+        .replaceAll("/", "_");
+    }
+
+    btnShot.addEventListener("click", () => {
+      // Nombre recomendado: etiqueta + timestamp
+      const etiqueta = safeText(poseNameEl.value || "P?");
+      const ahora = new Date();
+
+      const ts =
+        String(ahora.getFullYear()) +
+        String(ahora.getMonth() + 1).padStart(2, "0") +
+        String(ahora.getDate()).padStart(2, "0") + "_" +
+        String(ahora.getHours()).padStart(2, "0") +
+        String(ahora.getMinutes()).padStart(2, "0") +
+        String(ahora.getSeconds()).padStart(2, "0");
+
+      const filename = `${etiqueta}_${ts}.png`;
+
+      const link = document.createElement("a");
+      link.download = filename;
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+    });
+
+    btnStart.addEventListener("click", async () => {
+      try {
+        btnStart.disabled = true;
+
+        setStatus("iniciando cámara…");
+        await initCamera();
+
+        setStatus("cargando BodyPose…");
+
+        // Constructor async (ml5 1.x)
+        // Nota: si en algún navegador esto falla, el reporte de fallas debe indicarlo.
+        bodyPose = await ml5.bodyPose();
+
+        setStatus("detectando posturas…");
+
+        // Inicia detección continua sobre el vídeo.
+        // gotPoses recibirá los resultados periódicamente.
+        bodyPose.detectStart(video, (results) => {
+          lastPoses = results || [];
+        });
+
+        running = true;
+        loopDraw();
+
+      } catch (e) {
+        console.error(e);
+        setStatus(`error: ${e.name} — ${e.message}`);
+        btnStart.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
