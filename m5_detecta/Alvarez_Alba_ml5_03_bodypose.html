@@ -72,7 +72,21 @@
             src="falla_1.png"
             alt="falla1"
             height="300" /></p>
+   <p><strong>Más ejemplos de fallas que nos ocurrieron mientras haciamos las capturas</strong><br>
+  <strong>Mala iluminación o contraluz</strong><br>
+  Qué falla: La cámara pierde puntos clave del rostro o del cuerpo, o los coloca en posiciones incorrectas.<br>
+  Cuándo ocurre: En condiciones de poca luz, iluminación muy tenue o cuando el usuario está a contraluz.<br>
+  Por qué puede ocurrir: Los modelos de visión artificial dependen del contraste y la claridad de las imágenes para identificar puntos de referencia. Cuando la iluminación es insuficiente o excesiva desde el fondo, se reducen los detalles visibles y el modelo no puede detectar correctamente las características necesarias.<br>
+  <strong>Distancia incorrecta</strong><br>
+  Qué falla: El sistema no detecta correctamente el rostro o el cuerpo, o calcula mal la posición de los puntos clave.<br>
+  Cuándo ocurre: Cuando el usuario está demasiado cerca o lejos de la cámara.<br>
+  Por qué puede ocurrir: Los modelos están entrenados con rangos de distancia específicos. Si el rostro o el cuerpo ocupa demasiado espacio en la imagen o aparece muy pequeño, las proporciones cambian respecto a los datos de entrenamiento y el sistema pierde precisión en la detección.<br>
+   <strong>Resultados “inestables” al inicio</strong><br>
+  Qué falla: Durante los primeros segundos, los puntos detectados cambian bruscamente de posición o aparecen detecciones erráticas.<br>
+  Cuándo ocurre: Justo al iniciar la cámara o al comenzar la detección del usuario.<br>
+  Por qué puede ocurrir: El modelo necesita algunos fotogramas iniciales para ajustar parámetros internos como exposición, enfoque y seguimiento temporal. Hasta que logra una referencia estable del usuario, puede generar resultados variables o poco precisos.<br>
   
+   </p>          
   <script>
     const btnStart = document.getElementById("btnStart");
     const btnShot  = document.getElementById("btnShot");
@@ -256,4 +270,5 @@
   </script>
 </body>
 </html>
+
 
