@@ -44,13 +44,21 @@
      A continuación detallo los errores detectados en el proceso
     </p>
     <ol>
-      <li>Fallo 1: …</li>
-      <li>Fallo 2: …</li>
-      <li>Fallo 3: …</li>
+      <li><strong>Fallo 1: </strong><br>
+        Qué ocurrió: El modelo debía predecir la clase “neutral” cuando aparecía solo la persona, pero predijo “objeto” aunque no había ningún objeto visible.<br>
+        Cuándo: Ocurrió cuando había poca luz en la habitación y el fondo era oscuro. La persona estaba a una distancia media de la cámara.<br>
+        Por qué crees que pasó: Probablemente el modelo aprendió algunos patrones de sombras o colores oscuros que también aparecían en las imágenes de la clase “objeto”.</li>
+      <li><strong>Fallo 2: </strong><br>
+        Qué ocurrió: El modelo debía predecir la clase “objeto” cuando la persona sostenía el objeto, pero predijo “neutral”.<br>
+        Cuándo: Sucedió cuando el objeto estaba a medias en la cámara y se movía un poco.<br>
+        Por qué crees que pasó: Es posible que el modelo no tuviera suficientes ejemplos con el objeto a diferentes distancias o en movimiento, por lo que no pudo reconocer bien sus características.</li>
+      <li><strong>Fallo 3:</strong> <br>
+        Qué ocurrió: El modelo predijo “objeto” aunque la persona estaba sin el objeto, solo moviendo las manos.<br>
+        Cuándo: Ocurrió con movimiento rápido de las manos y con un fondo parecido al que había en las imágenes de entrenamiento con el objeto.<br>
+        Por qué crees que pasó: El modelo pudo haber aprendido patrones del fondo o del movimiento en lugar de centrarse solo en el objeto. Esto puede pasar cuando los ejemplos de entrenamiento no son lo suficientemente variados.</li>
     </ol>
   </div>
 
 
 </body>
-
 </html>
